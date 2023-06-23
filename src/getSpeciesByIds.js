@@ -1,9 +1,9 @@
 const { species } = require('../data/zoo_data');
 
-function getSpeciesByIds(...id) {
-  if (!id) return [];
+function getSpeciesByIds(...id) { // ...id = rest operator
+  if (id.length === 0) return []; // se não tiver id, retorna array vazio
 
-  const animals = species.filter((element) => id.includes(element.id));
-  return animals;
+  return species.filter((specie) => id.includes(specie.id)); // retorna array com as espécies referentes aos ids
 }
+
 module.exports = getSpeciesByIds;

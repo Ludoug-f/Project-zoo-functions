@@ -1,33 +1,50 @@
 const { employees, species } = require('../data/zoo_data');
 
 function getEmployee(obj) {
-  const valor = Object.values(obj); // valor do parametro
-  const employee = employees.find((element) => element.firstName === valor[0] // objeto do employee
-  || element.lastName === valor[0] || element.id === valor[0]);
-  const animalId = employee.responsibleFor; // id animais que e responsavel
-  const animalName = animalId.map((element) => species.find((element2) => // nome dos animais
-    element2.id === element).name);
-  const locations = animalId.map((element) => species.find((element2) => // local dos animais
-    element2.id === element).location);
-  const result = {
-    id: `${employee.id}`,
-    fullName: `${employee.firstName} ${employee.lastName}`,
-    species: animalName,
-    locations,
-  };
-  return result;
-}
-
-function getEmployeesCoverage(obj) {
-  const allEmployees = employees.map((element) => getEmployee({ id: element.id })); // cria array executando a primeira funçao pra cada funcionario
-  if (!obj) return allEmployees;
-  const valor1 = Object.values(obj); // valor do parametro
-  const verifyEmployee = employees.some((element) => element.firstName === valor1[0] // objeto do employee
-  || element.lastName === valor1[0] || element.id === valor1[0]);
-  if (verifyEmployee === true) {
-    return getEmployee(obj);
-  } if (verifyEmployee === false) {
+  const identifier = Object.values(obj)[0];
+  try {
+    const employee = employees.find((element) =>
+      element.firstName === identifier
+    || element.lastName === identifier
+    || element.id === identifier);
+    const { id, firstName, lastName, responsibleFor } = employee;
+    const fullName = `${firstName} ${lastName}`;
+    return { id, fullName, responsibleFor };
+  } catch (error) {
     throw new Error('Informações inválidas');
   }
 }
+
+function getAnimals(obj) {
+  const { responsibleFor } = getEmployee(obj);
+  const animals = responsibleFor.map((animalId) =>
+    species.find((element) => element.id === animalId).name);
+  return animals;
+}
+
+function getLocations(obj) {
+  const { responsibleFor } = getEmployee(obj);
+  const locations = responsibleFor.map((animalId) =>
+    species.find((element) => element.id === animalId).location);
+  return locations;
+}
+
+function getEmployeesCoverage(obj) {
+  if (!obj) {
+    const employeesCoverage = employees.map((employee) => {
+      const { id, firstName, lastName } = employee;
+      const fullName = `${firstName} ${lastName}`;
+      const animals = getAnimals({ id });
+      const locations = getLocations({ id });
+      return { id, fullName, species: animals, locations };
+    });
+    return employeesCoverage;
+  }
+
+  const { id, fullName } = getEmployee(obj);
+  const animals = getAnimals(obj);
+  const locations = getLocations(obj);
+  return { id, fullName, species: animals, locations };
+}
+
 module.exports = getEmployeesCoverage;
