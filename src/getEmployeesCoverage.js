@@ -1,5 +1,7 @@
 const { employees, species } = require('../data/zoo_data');
 
+// Esta função será responsável por associar informações de cobertura das pessoas funcionárias.
+
 function getEmployee(obj) {
   const identifier = Object.values(obj)[0];
   try {

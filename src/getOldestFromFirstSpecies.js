@@ -1,5 +1,7 @@
 const { employees, species } = require('../data/zoo_data');
 
+// A função busca por informações do animal mais velho da primeira espécie gerenciada pela pessoa colaboradora do parâmetro.
+
 function getOldestFromFirstSpecies(id) {
   const employee = employees.find((emp) => emp.id === id);
   const firstSpeciesId = employee.responsibleFor[0];

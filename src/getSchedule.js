@@ -1,5 +1,7 @@
 const { species, hours } = require('../data/zoo_data');
 
+// A função é responsável por disponibilizar as informações de horário dos animais em uma consulta para o usuário, que pode querer ter acesso ao cronograma da semana, de um dia ou de um animal em específico.
+
 const createScheduleObject = (day) => {
   const { [day]: { open, close } } = hours;
   const exhibition = species.filter((animal) => animal.availability.includes(day))
